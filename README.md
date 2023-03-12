@@ -1,4 +1,4 @@
-# List Apps
+# installed::
 
 A simple cross-platform crate that lists all the apps installed on a system.
 Windows and MacOS are supported.
@@ -9,8 +9,8 @@ Single entrypoint is `installed::list()` which returns an iterator of `App`s.
 Each `App` has standardized accessor functions to get metadata.
 
 ```rust
-fn main() -> Result<(), Box<dyn Error>> {
-    let apps = installed::list()?;
+fn main() {
+    let apps = installed::list().expect("list apps");
     for app in apps {
         // metadata accessor fns, these are only evaluated when used
         let name = app.name();
@@ -18,7 +18,6 @@ fn main() -> Result<(), Box<dyn Error>> {
         let publisher = app.publisher();
         println!("{name} v{version} by {publisher}");
     }
-    Ok(())
 }
 ```
 

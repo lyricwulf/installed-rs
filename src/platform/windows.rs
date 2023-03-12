@@ -4,10 +4,6 @@ use winreg::enums::*;
 use winreg::reg_key::RegKey;
 use winreg::HKEY;
 
-thread_local! {
-    static UNINSTALLS: Option<RegKey> = None;
-}
-
 pub struct App {
     reg: RegKey,
 }
@@ -51,15 +47,14 @@ impl App {
     pub fn version(&self) -> Cow<str> {
         self.get_value("DisplayVersion")
     }
-    pub fn dump(&self) -> Cow<str> {
+    pub fn dump(&self) -> String {
         self.reg
             .enum_values()
             .map(|r| {
                 let (name, value) = r.unwrap();
                 format!("{}: {}\n", name, value)
             })
-            .collect::<String>()
-            .into()
+            .collect()
     }
     pub fn list() -> Result<impl Iterator<Item = App>, Box<dyn Error>> {
         let system_apps = AppList::new(
